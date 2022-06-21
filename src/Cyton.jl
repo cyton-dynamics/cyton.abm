@@ -68,8 +68,8 @@ createPopulation(nCells::Int,
  `Division` and `Death` are two predefined events
 """
 function createPopulation(nCells::Int, 
-  cellFactory::Function,
-  environmentFactory::Function=()->[];
+  cellFactory::Function;
+  environmentAgents::Vector{EnvironmentalAgent};
   eventCallbacks::Vector{Function}=Function[])
 
   space = VoidSpace()
@@ -83,10 +83,17 @@ function createPopulation(nCells::Int,
     add_agent_pos!(agent, model)
     cell
   end
+  
+  id = length(cells)
+  for e in environmentAgents
+    id += 1
+    agent = AgentImpl(id, e)
+    add_agent_pos!(agent,model)
+  end
 
-  return CytonModel(model, cells, environmentFactory(), eventCallbacks)
+ 
+  return CytonModel(model, cells, environmentalAgents ,eventCallbacks)
 end
-
 """
 interact(::EnvironmentalAgent, ::Cell, ::TIme, ::Duration)
 
