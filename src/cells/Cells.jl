@@ -76,7 +76,7 @@ Cell(birth::Time)::Cell{GenericCell}
 Constructor for a generic cell.
 """
 function Cell(birth::Time)::Cell{GenericCell}
-  return Cell(birth, 0, FateTimer[], Dict{CellEvent, Vector{Function}}(), GenericCell())
+  return Cell(birth, 0, FateTimer[], Dict{CytonEvent, Vector{Function}}(), GenericCell())
 end
 
 """
@@ -85,7 +85,7 @@ Cell(birth::Time, cellType::T) where T <: CellType
 Constructor for a cell of type `T`
 """
 function Cell(birth::Time, cellType::T) where T <: CellType
-  return Cell(birth, 0, FateTimer[], Dict{CellEvent, Vector{Function}}(), cellType)
+  return Cell(birth, 0, FateTimer[], Dict{CytonEvent, Vector{Function}}(), cellType)
 end
 
 """
@@ -94,7 +94,7 @@ Cell(birth::Time, divisionCount::Int64)::Cell{GenericCell}
 Constructor for a daughter cell (i.e. a cell with a division count)
 """
 function Cell(birth::Time, divisionCount::Int64)
-  return Cell(birth, divisionCount, FateTimer[], Dict{CellEvent, Vector{Function}}(), GenericCell())
+  return Cell(birth, divisionCount, FateTimer[], Dict{CytonEvent, Vector{Function}}(), GenericCell())
 end
 
 """

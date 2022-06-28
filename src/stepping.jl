@@ -2,6 +2,9 @@ using Agents
 
 export modelTime, modelTimeStep, step
 
+
+
+
 """
 modelTime(model::CellPopulation)::Time
 
@@ -35,7 +38,7 @@ function step(model::CytonModel, stimuli::Vector{T}=Vector{Stimulus}()) where T<
 
   Δt   = modelTimeStep(model)
   time = modelTime(model)
-  for cell in model.cells
+  for (cell,id) in model.cells
     for environment in model.environmentAgents
       interact(environment, cell, time, Δt)
     end
@@ -57,19 +60,22 @@ end
 stepModel(model::AgentBasedModel) = model.properties[:step_cnt] += 1
 
 function doStep(environment::EnvironmentalAgent, time::Time, Δt::Duration, model::CytonModel, stimuli::Vector{T}) where T<:Stimulus
+  
   for stimulus in stimuli
     stimulate(environment, stimulus, time, Δt)
   end
   
   events = step(environment, time, Δt, model)
-
-  for e in events
-    notifyObservers(e, environment, time)
+  if !(events==nothing)
+    for e in events
+      notifyObservers(e, environment, time)
+    end
   end
 end
   
-function doStep(cell::Cell, time::Time, Δt::Duration, model::CytonModel, stimuli::Vector{T}) where T<:Stimulus
-  cell = agent.cell
+function doStep(cell::Cell,time::Time, Δt::Duration, model::CytonModel, stimuli::Vector{T}) where T<:Stimulus
+  
+  agent_id=model.cells[cell]
 
   for stimulus in stimuli
     stimulate(cell, stimulus, time, Δt)
@@ -77,17 +83,15 @@ function doStep(cell::Cell, time::Time, Δt::Duration, model::CytonModel, stimul
 
   events = [step(timer, time, Δt) for timer in cell.timers]
   events = filter(x -> x ≠ nothing, events)
-
+  
   if any(typeof.(events) .== Death)
-    die(cell)
-    kill_agent!(agent, model.model)
+    removeCell(cell,model,agent_id)
   end
   
   if any(typeof.(events) .== Division)
     new_cell = divide(cell, time)
     if new_cell ≠ nothing
-      new_agent = AgentImpl(model.model.maxid[]+1, new_cell)
-      add_agent_pos!(new_agent, model.model)
+      addCell(new_cell,model)
       for e in events
         notifyObservers(e, new_cell, time)
       end
@@ -104,4 +108,3 @@ function doStep(cell::Cell, time::Time, Δt::Duration, model::CytonModel, stimul
   end
 
 end
-

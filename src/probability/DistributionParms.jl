@@ -4,7 +4,7 @@ FixedDistributionParms,
 LogNormalParms, 
 NormalParms, 
 PoissonParms, 
-draw,
+sample,
 plotPdf,
 describe
 
