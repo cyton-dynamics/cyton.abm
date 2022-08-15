@@ -125,8 +125,6 @@ function createPopulation(nCells::Int,
 end
 
 
-
-
 """
 interact(::EnvironmentalAgent, ::Cell, ::TIme, ::Duration)
 

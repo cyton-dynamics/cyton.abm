@@ -1,6 +1,6 @@
 abstract type FateTimer end
 
-export shouldDie, shouldDivide, inherit, FateTimer
+export inherit, FateTimer
 
 """
   step(::FateTimer, ::Time, ::Duration)::Union{CellEvent, Nothing}
@@ -11,16 +11,6 @@ concrete `FateTimer`
 Optionally return a `CellEvent`
 """
 step(timer::FateTimer, ::Time, ::Duration)::Union{CellEvent, Nothing} = error("step method not implemented for $(typeof(timer))")
-
-"""
-  shouldDie(::FateTimer, ::Time)
-
-  This is called every time step. If it return true the cell is removed from the simmulation
-"""
-shouldDie(::FateTimer, ::Time) = false
-
-"Call every time step and potentiall returns a new cell"
-shouldDivide(::FateTimer, ::Time) = false
 
 """
   inherit(::FateTimer, ::Time)::FateTimer

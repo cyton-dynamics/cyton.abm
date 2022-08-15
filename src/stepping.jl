@@ -66,14 +66,14 @@ function doStep(environment::EnvironmentalAgent, time::Time, Δt::Duration, mode
   end
   
   events = step(environment, time, Δt, model)
-  if !(events==nothing)
+  if !(events===nothing)
     for e in events
       notifyObservers(e, environment, time)
     end
   end
 end
   
-function doStep(cell::Cell,time::Time, Δt::Duration, model::CytonModel, stimuli::Vector{T}) where T<:Stimulus
+function doStep(cell::Cell, time::Time, Δt::Duration, model::CytonModel, stimuli::Vector{T}) where T<:Stimulus
   
   agent_id=model.cells[cell]
 
